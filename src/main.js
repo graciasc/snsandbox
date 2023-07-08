@@ -3,10 +3,9 @@ import Vuex from "vuex";
 import App from "./App.vue";
 import { createStore } from "vuex";
 import AthleteData from "@/assets/data.json";
-import './App.css'
 
-Vue.config.productionTip = false;
 Vue.use(Vuex);
+Vue.config.productionTip = false;
 
 
 export const store = createStore({

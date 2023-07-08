@@ -68,9 +68,7 @@ export default {
 </script>
 
 <style>
-
 th {
   padding: 15px
 }
-
 </style>
