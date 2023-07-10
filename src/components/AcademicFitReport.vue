@@ -4,7 +4,13 @@
       <div class="flex space-x-1">
         <img class="rounded-full mt-1 w-16 h-16" :src="athlete.profile_image" alt="profile image" />
         <div class="flex flex-col">
-          <h1 class="text-md font-bold text-sr-blue">{{ athlete.name }}</h1>
+          <div v-if="!showInput">
+            <h1 @click="toggleEditing" class="w-fit text-md font-bold text-sr-blue">{{ athlete.name }}
+            </h1>
+          </div>
+          <div class="flex" v-else>
+            <input @change="handleInputChange" :value="inputText" @blur="saveText" @keyup.enter="saveText" />
+          </div>
           <div class="grid grid-cols-2 place-content-evenly">
             <div class="flex flex-col text-xs">
               <label><span class="font-bold"> Sport: </span> {{ athlete.sport }} </label>
@@ -62,81 +68,41 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
+import { ref, computed } from 'vue';
 import ReportRow from './ReportRow.vue';
-// import type { Athlete } from '../interfaces/Athlete'
-export interface AthleteResponse {
-  data: AthleteMeta[]
+import { useAthleteStore } from '@/stores/AthleteStore'
+
+const { athleteData } = storeToRefs(useAthleteStore());
+const athlete = computed(() => athleteData.value);
+const athleteStore = useAthleteStore();
+
+const useEditButton = () => {
+  const showInput = ref(false)
+  const inputText = ref(athleteData.value.name);
+
+  const toggleEditing = () => {
+    showInput.value = true;
+  };
+
+  const saveText = () => {
+    showInput.value = false;
+    athleteStore.updateAthleteName(inputText.value)
+  };
+
+  const handleInputChange = (event) => {
+    inputText.value = event.target.value;
+  };
+
+  return { showInput, inputText, toggleEditing, saveText, handleInputChange };
 }
 
-export interface AthleteMeta {
-  name: string;
-  sport: string;
-  grad_year: number;
-  birthday: string;
-  email: string;
-  url: string;
-  club: {
-    name: string;
-  };
-  high_school: {
-    name: string;
-  };
-  gpa: number;
-  major: string;
-  profile_image: string;
-  report: Report[];
-}
-
-interface Report {
-  school: string;
-  division: string;
-  conference: string;
-  ranking: number;
-  gpa: {
-    min: number;
-    '25%': number;
-    '50%': number;
-    '75%': number;
-    max: number;
-  };
-  sat: {
-    reading: {
-      min: number | string;
-      max: number | string;
-    };
-    math: {
-      min: number | string;
-      max: number | string;
-    };
-  };
-  act: {
-    min: number | string;
-    max: number | string;
-  };
-}
-
-
-defineProps<{
-  athlete: AthleteMeta
-}>()
-/*
- * TODO: set defaults if the value is undefined or null
-const props = withDefaults(defineProps<Props>(), {
-  msg: 'hello',
-  labels: () => ['one', 'two']
-})
-*/
+const { showInput, inputText, toggleEditing, saveText, handleInputChange } = useEditButton();
 </script>
 
 <style>
 table {
   width: 100%;
-}
-
-table,
-th,
-td {
-  border-collapse: collapse;
 }
 
 th {
