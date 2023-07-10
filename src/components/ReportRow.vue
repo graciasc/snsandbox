@@ -20,8 +20,9 @@
 
 
 <script setup lang="ts">
+import type { Report } from '@/interfaces/Athlete'
 defineProps<{
-  reports: Array<any>
+  reports: Report[]
 }>()
 </script>
 
