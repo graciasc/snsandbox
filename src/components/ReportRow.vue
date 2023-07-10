@@ -22,14 +22,10 @@
 
 
 
-<script>
-export default {
-  name: "ReportRow",
-  props: {
-    reports: {
-      type: Array,
-      required: true
-    }
-  },
-}
+<script setup lang="ts">
+const props = defineProps<{
+  reports: Array<any>
+}>()
+
+console.log('value', props)
 </script>
