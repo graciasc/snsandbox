@@ -4,10 +4,12 @@ import Academia from './components/AcademicFitReport.vue'
 
 </script>
 <template>
-  <h1 class="text-3xl font-bold underline">
-    Hello world!
-  </h1>
-  <Academia :athlete="athlete.data[0]" />
+  <div class="space-y-8">
+    <div class="border-b-[thick] border-sr-blue border-b-[10px]" />
+    <Academia :athlete="athlete.data[0]" />
+
+    <div class="border-b-[thick] border-sr-blue" />
+  </div>
 </template>
 
 
