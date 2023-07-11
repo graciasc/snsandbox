@@ -1,9 +1,11 @@
 <template>
   <div class="px-12">
-    <div class="flex justify-between">
-      <div class="flex space-x-1">
-        <img class="rounded-full mt-1 w-16 h-16" :src="athlete.profile_image" alt="profile image" />
-        <div class="flex flex-col">
+    <div class="md:flex md:justify-between">
+      <div class="md:flex md:space-x-1 md:flex-row flex flex-col items-center ">
+        <div class="md:pt-0 pt-1">
+          <ProfileImage :initials="initials" :profile_image="null" />
+        </div>
+        <div class="flex flex-col md:items-start items-center">
           <div v-if="!showInput">
             <h1 @click="toggleEditing" class="w-fit text-md font-bold text-sr-blue">{{ athlete.name }}
             </h1>
@@ -11,13 +13,14 @@
           <div class="flex" v-else>
             <input @change="handleInputChange" :value="inputText" @blur="saveText" @keyup.enter="saveText" />
           </div>
-          <div class="grid grid-cols-2 place-content-evenly">
-            <div class="flex flex-col text-xs">
+          <div
+            class="md:grid md:grid-cols-2 md:place-content-evenly grid justify-center text-xs md:pt-0 pt-2 md:text-left text-center ">
+            <div class="flex flex-col">
               <label><span class="font-bold"> Sport: </span> {{ athlete.sport }} </label>
               <label><span class="font-bold"> Class: </span> {{ athlete.grad_year }} </label>
               <label><span class="font-bold"> Club: </span> {{ athlete.club.name }} </label>
             </div>
-            <div class="flex flex-col text-xs">
+            <div class="flex flex-col">
               <label><span class="font-bold"> High School: </span> {{ athlete.high_school.name }} </label>
               <label><span class="font-bold"> GPA: </span> {{ athlete.gpa }} </label>
               <label><span class="font-bold"> Desired Major: </span> {{ athlete.major }} </label>
@@ -25,45 +28,48 @@
           </div>
         </div>
       </div>
-      <div class="ml-auto">
-        <img class="h-auto w-16 mx-auto" src="../assets/logo.svg" />
-        <h1 class="text-sm w-fit pt-4 "> Academic Fit Report </h1>
+      <div class="md:ml-auto md:pt-0 pt-12">
+        <img class="h-12 w-auto mx-auto" src="../assets/srlogo.png" />
+        <h1 class="text-sm w-fit md:ml-atuo mx-auto "> Academic Fit Report </h1>
       </div>
     </div>
   </div>
   <div class="px-12 text-xxxs">
-    <table>
-      <tr>
-        <th rowspan="2">School Name</th>
-        <th rowspan="2">Althletic Division</th>
-        <th rowspan="2">Conference</th>
-        <th colspan="1">Ranking**</th>
-        <th colspan="5">GPA**</th>
-        <th colspan="1">SAT READING***</th>
-        <th colspan="1">SAT MATH***</th>
-        <th colspan="1">ACT COMPOSITE***</th>
-      </tr>
-      <tr>
-        <th class="text-center">(DI NCAA) <br /> (DII & DIII Hero Sports)</th>
-        <th class="text-center">Min</th>
-        <th class="text-center">25%</th>
-        <th class="text-center">50%</th>
-        <th class="text-center">75%</th>
-        <th class="text-center">Max</th>
-        <th class="text-center"> 25% - 75%</th>
-        <th class="text-center"> 25% - 75%</th>
-        <th class="text-center"> 25% - 75%</th>
-      </tr>
-      <ReportRow :reports="athlete.report" />
-    </table>
-    <p class="mt-24 text-xxs">
-      *Rankings for Division I schools based on NCAA data (www.ncaa.com) and rankings for Division II & III schools are
-      based on data from Hero Sports (www.herosports.com/rankings)
-      ** GPA is based on SportsRecruits members who have shown interest in (favorited) the school and have provided their
-      GPA on their profile
-      ***SAT and ACT scores based on national data provided by the National Center of Education Statistics-
-      https://nces.ed.gov/ipeds/
-    </p>
+    <div class="overflow-x-auto w-full ">
+      <table>
+        <tr>
+          <th class=" sticky left-0" rowspan="2">School Name</th>
+          <th rowspan="2">Althletic Division</th>
+          <th rowspan="2">Conference</th>
+          <th colspan="1">Ranking**</th>
+          <th colspan="5">GPA**</th>
+          <th colspan="1">SAT READING***</th>
+          <th colspan="1">SAT MATH***</th>
+          <th colspan="1">ACT COMPOSITE***</th>
+        </tr>
+        <tr>
+          <th class="text-center">(DI NCAA) <br /> (DII & DIII Hero Sports)</th>
+          <th class="text-center">Min</th>
+          <th class="text-center">25%</th>
+          <th class="text-center">50%</th>
+          <th class="text-center">75%</th>
+          <th class="text-center">Max</th>
+          <th class="text-center"> 25% - 75%</th>
+          <th class="text-center"> 25% - 75%</th>
+          <th class="text-center"> 25% - 75%</th>
+        </tr>
+        <ReportRow :reports="athlete.report" :playerGpa="athlete.gpa" />
+      </table>
+      <p class="mt-24 text-xxs">
+        *Rankings for Division I schools based on NCAA data (www.ncaa.com) and rankings for Division II & III schools are
+        based on data from Hero Sports (www.herosports.com/rankings)
+        ** GPA is based on SportsRecruits members who have shown interest in (favorited) the school and have provided
+        their
+        GPA on their profile
+        ***SAT and ACT scores based on national data provided by the National Center of Education Statistics-
+        https://nces.ed.gov/ipeds/
+      </p>
+    </div>
   </div>
 </template>
 
@@ -71,6 +77,7 @@
 import { storeToRefs } from 'pinia';
 import { ref, computed } from 'vue';
 import ReportRow from './ReportRow.vue';
+import ProfileImage from './ProfileImage.vue'
 import { useAthleteStore } from '@/stores/AthleteStore'
 
 const { athleteData } = storeToRefs(useAthleteStore());
@@ -96,6 +103,10 @@ const useEditButton = () => {
 
   return { showInput, inputText, toggleEditing, saveText, handleInputChange };
 }
+
+const initials = computed(() => {
+  return athlete.value.name[0].toUpperCase() + athlete.value.name.split(' ')[1][0].toUpperCase();
+})
 
 const { showInput, inputText, toggleEditing, saveText, handleInputChange } = useEditButton();
 </script>

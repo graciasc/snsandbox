@@ -24,6 +24,9 @@
       ],
       "@/interface/*": [
         "./src/interface/*"
+      ],
+      "@/components/*": [
+        "./src/components/*"
       ]
     }
   }
