@@ -1,9 +1,42 @@
+<script setup lang="ts">
+import { storeToRefs } from 'pinia';
+import { ref, computed } from 'vue';
+import ReportRow from '@/components/ReportRow.vue';
+import ProfileImage from '@/components/ProfileImage.vue'
+import { useAthleteStore } from '@/stores/AthleteStore'
+
+const { athleteData } = storeToRefs(useAthleteStore());
+const athlete = computed(() => athleteData.value);
+const athleteStore = useAthleteStore();
+
+const showInput = ref(false)
+const inputText = ref(athleteData.value.name);
+
+const toggleEditing = () => {
+  showInput.value = true;
+};
+
+const saveText = () => {
+  showInput.value = false;
+  athleteStore.updateAthleteName(inputText.value)
+};
+
+const handleInputChange = (event) => {
+  inputText.value = event.target.value;
+};
+
+
+const initials = computed(() => {
+  return athlete.value.name[0].toUpperCase() + athlete.value.name.split(' ')[1][0].toUpperCase();
+})
+</script>
+
 <template>
   <div class="px-12">
     <div class="md:flex md:justify-between">
       <div class="md:flex md:space-x-1 md:flex-row flex flex-col items-center ">
         <div class="md:pt-0 pt-1">
-          <ProfileImage :initials="initials" :profile_image="null" />
+          <ProfileImage :initials="initials" :profileImage="athlete.profile_image" />
         </div>
         <div class="flex flex-col md:items-start items-center">
           <div v-if="!showInput">
@@ -36,7 +69,7 @@
   </div>
   <div class="px-12 text-xxxs">
     <div class="overflow-x-auto w-full ">
-      <table>
+      <table class="w-full text-center">
         <tr>
           <th class=" sticky left-0" rowspan="2">School Name</th>
           <th rowspan="2">Althletic Division</th>
@@ -73,52 +106,10 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { storeToRefs } from 'pinia';
-import { ref, computed } from 'vue';
-import ReportRow from './ReportRow.vue';
-import ProfileImage from './ProfileImage.vue'
-import { useAthleteStore } from '@/stores/AthleteStore'
-
-const { athleteData } = storeToRefs(useAthleteStore());
-const athlete = computed(() => athleteData.value);
-const athleteStore = useAthleteStore();
-
-const useEditButton = () => {
-  const showInput = ref(false)
-  const inputText = ref(athleteData.value.name);
-
-  const toggleEditing = () => {
-    showInput.value = true;
-  };
-
-  const saveText = () => {
-    showInput.value = false;
-    athleteStore.updateAthleteName(inputText.value)
-  };
-
-  const handleInputChange = (event) => {
-    inputText.value = event.target.value;
-  };
-
-  return { showInput, inputText, toggleEditing, saveText, handleInputChange };
-}
-
-const initials = computed(() => {
-  return athlete.value.name[0].toUpperCase() + athlete.value.name.split(' ')[1][0].toUpperCase();
-})
-
-const { showInput, inputText, toggleEditing, saveText, handleInputChange } = useEditButton();
-</script>
-
 <style>
-table {
-  width: 100%;
-}
-
 th {
-  text-align: center;
   background-color: black;
   color: white;
 }
 </style>
+

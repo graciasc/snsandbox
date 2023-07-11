@@ -1,13 +1,13 @@
 <template>
-  <tbody class="">
-    <tr :class="`${sticky(i)} text-center p-5`" v-for="(item, i) in reports" :key="item.school">
-      <td :class="`text-left sticky  ${sticky(i)} left-0`">{{ item.school }}</td>
+  <tbody class="text-center space-x-2">
+    <tr :class="`${cellBackgroundColor(i)} text-center p-5`" v-for="(item, i) in reports" :key="item.school">
+      <td :class="`text-left sticky  ${cellBackgroundColor(i)} left-0`">{{ item.school }}</td>
       <td>{{ item.division }}</td>
       <td class="text-left">{{ item.conference }}</td>
       <td>{{ item.ranking }}</td>
       <td>{{ item.gpa.min }}</td>
       <td>{{ item.gpa['25%'].toFixed(2) }}</td>
-      <td :style="{ backgroundColor: gradient(item.gpa['50%']) }">{{ item.gpa['50%'].toFixed(2) }}</td>
+      <td :style="{ backgroundColor: cellGradient(item.gpa['50%']) }">{{ item.gpa['50%'].toFixed(2) }}</td>
       <td>{{ item.gpa['75%'].toFixed(2) }}</td>
       <td>{{ item.gpa.max.toFixed(2) }}</td>
       <td>{{ item.sat.reading.min }} - {{ item.sat.reading.max }}</td>
@@ -28,15 +28,13 @@ const props = defineProps<{
   playerGpa: number;
 }>()
 
-const sticky = computed(() => {
+const cellBackgroundColor = computed(() => {
   return (incrementor: number) => {
     return incrementor % 2 === 1 ? 'bg-blue-50' : 'bg-white';
   }
 })
 
-
-
-const gradient = computed(() => {
+const cellGradient = computed(() => {
   return (schoolGpa: number) => {
     const difference = schoolGpa - props.playerGpa
 
@@ -53,13 +51,5 @@ const gradient = computed(() => {
     }
   }
 })
-
 </script>
 
-<style>
-td {
-  text-align: center;
-  vertical-align: bottom;
-  padding: 4px 2px 0 2px;
-}
-</style>
