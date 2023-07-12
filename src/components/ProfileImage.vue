@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 
 const props = defineProps<{
-  profileImage: string;
+  profileImage: string | null;
   initials: string;
 }>()
 

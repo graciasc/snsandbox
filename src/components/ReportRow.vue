@@ -17,8 +17,6 @@
   </tbody>
 </template>
 
-
-
 <script setup lang="ts">
 import type { Report } from '@/interfaces/Athlete'
 import { computed } from 'vue'
@@ -52,4 +50,3 @@ const cellGradient = computed(() => {
   }
 })
 </script>
-
